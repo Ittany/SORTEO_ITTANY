@@ -44,9 +44,7 @@ function reducer(state, action) {
   }
 }
 
-/* ============================================================
-   RUEDA SVG — segmentos de colores con los números
-   ============================================================ */
+/* rueda de la ruleta */
 const WHEEL_COLORS = [
   '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6',
   '#ec4899', '#06b6d4', '#f97316', '#84cc16', '#a855f7',
@@ -234,9 +232,7 @@ function HomePage({ onStart, totalDraws, totalBalls }) {
   )
 }
 
-/* ============================================================
-   PÁGINA DEL JUEGO
-   ============================================================ */
+/* pagina de juego */
 function GamePage({ state, dispatch, onHome }) {
   const [entry, setEntry] = useState('')
   const [query, setQuery] = useState('')
