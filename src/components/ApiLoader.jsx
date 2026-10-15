@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useFetch } from '../hooks/useFetch'
-import { useRaffle } from '../context/RaffleContext'
-import { useToast } from '../context/ToastContext'
+import { useRaffle } from '../contexts/RaffleContext'
+import { useToast } from '../contexts/ToastContext'
 import RenderBadge from './RenderBadge'
 
 const URL_EJEMPLO = 'https://jsonplaceholder.typicode.com/users'

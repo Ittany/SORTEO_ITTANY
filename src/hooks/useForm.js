@@ -5,7 +5,7 @@ export function useForm(initialValues = {}) {
   // aunque el padre pase un objeto nuevo en cada render.
   const initialRef = useRef(initialValues)
 
-  const [values, setValues] = useState(initialRef.current)
+  const [values, setValues] = useState(initialValues)
   const [errors, setErrors] = useState({})
 
   const handleChange = useCallback((event) => {

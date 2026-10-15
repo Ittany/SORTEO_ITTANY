@@ -1,22 +1,39 @@
 import { memo, useCallback, useMemo, useState } from 'react'
-import { useRaffle } from '../context/RaffleContext'
+import { useRaffle } from '../hooks/useRaffle'
+import { colorForNumber } from '../utils/ballColors'
 import RenderBadge from './RenderBadge'
 
-/* React.memo: solo se re-renderiza si cambian sus props.
-   Gracias a useCallback en el padre, `onRemove` mantiene su referencia. */
+const IconSearch = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+       strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden="true">
+    <circle cx="11" cy="11" r="7" />
+    <path d="m21 21-4.3-4.3" />
+  </svg>
+)
+
+const IconX = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"
+       strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+    <path d="M18 6 6 18M6 6l12 12" />
+  </svg>
+)
+
 const Ball = memo(function Ball({ participant, isWinner, onRemove }) {
+  const [c1, c2] = colorForNumber(participant.number)
   return (
-    <li className={`ball ${isWinner ? 'ball--winner' : ''}`}>
-      <span className="ball__number">{participant.number}</span>
-      <span className="ball__name">{participant.name}</span>
+    <li className={`ball-item ${isWinner ? 'ball-item--winner' : ''}`}>
+      <div className="ball-3d" style={{ '--c1': c1, '--c2': c2 }}>
+        <span className="ball-3d__num">{participant.number}</span>
+        <span className="ball-3d__shine" />
+      </div>
+      <span className="ball-item__name">{participant.name}</span>
       <button
-        className="ball__remove"
+        className="ball-item__remove"
         onClick={() => onRemove(participant.id)}
         aria-label={`Quitar ${participant.name}`}
       >
-        ×
+        <IconX />
       </button>
-      <RenderBadge label="Ball" />
     </li>
   )
 })
@@ -25,10 +42,8 @@ export default function BallList() {
   const { participants, winners, removeParticipant } = useRaffle()
   const [query, setQuery] = useState('')
 
-  // useMemo: derivado de winners. Solo se recalcula si winners cambia.
   const winnerIds = useMemo(() => new Set(winners.map((w) => w.id)), [winners])
 
-  // useMemo: filtro. No se recalcula si query/participants no cambian.
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!q) return participants
@@ -37,29 +52,31 @@ export default function BallList() {
     )
   }, [participants, query])
 
-  // useCallback: referencia estable para que React.memo funcione
   const handleRemove = useCallback((id) => removeParticipant(id), [removeParticipant])
 
   return (
-    <section className="card">
-      <h2>
-        2 · Bombo ({participants.length})
+    <section className="card card--balllist">
+      <header className="card__head">
+        <h2 className="card__title">2 · Bombo ({participants.length})</h2>
         <RenderBadge label="BallList" />
-      </h2>
+      </header>
 
-      <input
-        className="input"
-        placeholder="🔍 Filtrar pelotas…"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      <div className="search">
+        <span className="search__icon" aria-hidden="true"><IconSearch /></span>
+        <input
+          className="input"
+          placeholder="Filtrar pelotas..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </div>
 
       {participants.length === 0 ? (
-        <p className="empty">El bombo está vacío. Agrega tu primera pelota ☝️</p>
+        <p className="empty">El bombo está vacío. Agrega tu primera pelota.</p>
       ) : visible.length === 0 ? (
-        <p className="empty">Ninguna pelota coincide con “{query}”.</p>
+        <p className="empty">Sin resultados para «{query}».</p>
       ) : (
-        <ul className="ball-grid">
+        <ul className="ball-pit">
           {visible.map((p) => (
             <Ball
               key={p.id}
