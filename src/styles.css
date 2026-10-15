@@ -351,16 +351,23 @@ h2 {
 .card--balllist { --card-accent: var(--accent-balllist); }
 .card--wheel    { --card-accent: var(--accent-wheel); }
 .card--draw     { --card-accent: var(--accent-draw); }
-.card--winners  { --card-accent: var(--accent-winners); }
+.card--winners {
+  border-color: color-mix(in srgb, var(--green) 45%, var(--border));
+  background: var(--bg-card);
+}
 .card--stats    { --card-accent: var(--accent-stats); }
 
 .card--center { text-align: center; }
 
-.card--winners {
-  border-color: color-mix(in srgb, var(--accent-winners) 45%, var(--border));
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--accent-winners) 8%, var(--bg-card)) 0%, var(--bg-card) 45%);
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-accent, var(--violet));
 }
+.card--winners  { --card-accent: var(--accent-winners); }
+.card--winners { --card-accent: var(--green); }
 
 .card__head {
   display: flex;
@@ -603,9 +610,10 @@ h2 {
 }
 [data-theme="light"] .wheel {
   box-shadow:
-    0 0 40px color-mix(in srgb, var(--fuchsia) 25%, transparent),
-    0 0 90px color-mix(in srgb, var(--violet) 18%, transparent),
-    inset 0 0 20px rgba(0, 0, 0, 0.15);
+    inset -3px -4px 8px rgba(0, 0, 0, 0.4),
+    inset 2px 2px 6px rgba(255, 255, 255, 0.15),
+    0 0 18px color-mix(in srgb, var(--c1, #D946EF) 55%, transparent),
+    0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 /* Anillo interior */
@@ -678,7 +686,7 @@ h2 {
 }
 
 /* ==================================================================
-   GANADORES — borde lateral dorado
+   GANADORES — borde verde plano, sin iluminación
 ================================================================== */
 .winners-list {
   list-style: none;
@@ -688,47 +696,35 @@ h2 {
   flex-direction: column;
   gap: 10px;
 }
+
 .winner-row {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 14px 11px 18px;
+  padding: 11px 14px;
   border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--accent-winners) 8%, var(--bg-surface));
-  border: 1px solid color-mix(in srgb, var(--accent-winners) 35%, transparent);
+  background: var(--bg-surface);
+  border: 1px solid var(--green);
   animation: slide-right .35s var(--ease) both;
-  transition: box-shadow .25s var(--ease), border-color .25s var(--ease);
 }
-.winner-row::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 12%; bottom: 12%;
-  width: 4px;
-  border-radius: 0 4px 4px 0;
-  background: var(--accent-winners);
-  box-shadow: 0 0 12px var(--accent-winners);
-}
-.winner-row:hover {
-  border-color: var(--accent-winners);
-  box-shadow: 0 0 28px color-mix(in srgb, var(--accent-winners) 45%, transparent);
-}
+
 @keyframes slide-right {
   from { opacity: 0; transform: translateX(-10px); }
   to   { opacity: 1; transform: translateX(0); }
 }
+
 .winner-row__pos {
   display: grid;
   place-items: center;
   width: 34px; height: 34px;
   flex: 0 0 auto;
   border-radius: 10px;
-  background: var(--accent-winners);
-  color: #2a1f00;
+  background: var(--green);
+  color: #04160e;
   font-size: .82rem;
   font-weight: 900;
-  box-shadow: 0 0 14px color-mix(in srgb, var(--accent-winners) 60%, transparent);
 }
+
 .winner-row__name {
   flex: 1;
   min-width: 0;
@@ -739,7 +735,6 @@ h2 {
   font-size: .92rem;
   font-weight: 700;
 }
-
 /* ==================================================================
    MÉTRICAS
 ================================================================== */
